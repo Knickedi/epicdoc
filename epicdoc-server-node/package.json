@@ -1,0 +1,15 @@
+{
+  "name": "epicdoc-server",
+  "version": "0.1.0",
+  "description": "EpicDoc Server",
+  "main": "epicdoc-server.js",
+  "dependencies": {
+    "optimist": "~0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Viktor Reiser",
+  "license": "MIT"
+}

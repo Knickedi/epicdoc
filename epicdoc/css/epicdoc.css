@@ -1,0 +1,52 @@
+
+/* VIEWPORT HEADER */
+
+.ed-splitter,
+.ed-header-toolbar,
+.ed-header > .x-panel-body-default {
+	background-color: #157fcc !important;
+}
+.ed-header-title {
+	margin-bottom: 4px !important;
+}
+.ed-header-title .x-form-display-field {
+	color: white;
+	font-weight: bold;
+	font-size: 28px;
+}
+.ed-header-subtitle .x-form-display-field {
+	color: white;
+	font-size: 14px;
+}
+
+/* ICONS */
+
+.ed-icon-add {
+	background: url(../img/add.png);
+}
+.ed-icon-edit {
+	background: url(../img/edit.png);
+}
+.ed-icon-delete {
+	background: url(../img/delete.png);
+}
+
+/*
+.white-color {
+	color: white; 
+}
+.move-icon {
+	background: url(../image/move.png);
+}
+.remove-icon {
+	background: url(../image/remove.png);
+}
+.document-icon {
+	background: url(../image/document.png) center no-repeat !important;
+}
+.folder-icon {
+	background: url(../image/folder.png) center no-repeat !important;
+}
+.x-tool-add-icon {
+	background: url(../image/add.png) !important;
+}*/

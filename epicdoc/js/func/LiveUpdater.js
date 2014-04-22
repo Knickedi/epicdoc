@@ -1,6 +1,11 @@
 
 Ext.define('ED.func.LiveUpdater', {
     
+    // ATTRIBUTES ---------------------------------------------------------------------------------
+	
+	singleton: true,
+	extend: 'Ext.util.Observable',
+    
     // PUBLIC -------------------------------------------------------------------------------------
     
     testForLocalServer: function() {
@@ -14,16 +19,16 @@ Ext.define('ED.func.LiveUpdater', {
 			url: me.testUrl,
 			success: function(response) {
 				if (response && response.responseText == 'EpicDoc-Test') {
-					ED.App.setEditable('liveupdater', true);
 					ED.Log.d('LiveUpdater server test successful');
+					me.setOnline(true);
 				} else {
-					ED.App.setEditable('liveupdater', false);
 					ED.Log.e('LiveUpdater server test sent but received an invalid response');
+					me.setOnline(false);
 				}
 			},
 			failure: function() {
-				ED.App.setEditable('liveupdater', false);
 				ED.Log.i('LiveUpdater did\'t find a server');
+				me.setOnline(false);
 			}
 		});
     },
@@ -31,7 +36,7 @@ Ext.define('ED.func.LiveUpdater', {
 	updateDataByServer: function() {
 		var me = this;
 		
-		if (!me.enabled) {
+		if (!me.enabled && me.online) {
 			return;
 		}
 		
@@ -46,20 +51,43 @@ Ext.define('ED.func.LiveUpdater', {
 			},
 			success: function(response) {
 				if (response && response.responseText == 'EpicDoc-Update') {
-					// updated
+					me.setOnline(true);
 				} else {
 					ED.Log.i('LiveUpdater sent update request, but received an unexpected answer');
+					me.setOnline(false);
 				}
 			},
 			failure: function() {
 				ED.Log.e('LiveUpdater did\'t find a server for update');
+				me.setOnline(false);
 			}
 		});
+	},
+	
+	// PRIVATE ---------------------------------------------------------------------------------------
+	
+	setOnline: function(online) {
+		var me = this;
+		
+		if (me.online !== online) {
+			me.online = online;
+			me.fireEvent('online', online);
+			ED.App.setEditable('liveupdater', online);
+		}
 	},
 	
 	// INITIALIZATION --------------------------------------------------------------------------------
 	
 	constructor: function() {
+		var me = this;
+		
+		me.callParent();
+		me.addEvents(
+			'online'
+		);
+	},
+	
+	init: function() {
         var me = this,
             config = ED.Config;
         

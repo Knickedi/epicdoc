@@ -17,6 +17,19 @@ Ext.define('ED.Data', {
 		return Ext.Object.getKeys(this.dataMap);
 	},
 	
+	getDataChildrenIds: function(parentId) {
+		var ids = [],
+			map = this.dataMap;
+		
+		for (var id in map) {
+			if (map[id] && map[id].parentId == parentId) {
+				ids.push(id);
+			}
+		}
+		
+		return this.sortDataIds(ids);
+	},
+	
 	getSectionDataIds: function() {
 		var me = this,
 			ids = [];
@@ -28,6 +41,32 @@ Ext.define('ED.Data', {
 		}
 		
 		return me.sortDataIds(ids);
+	},
+	
+	getDataTextProperty: function(id, property) {
+		var data = this.getDataProperty(id, property);
+		
+		if (Ext.isString(data)) {
+			return data;
+		}
+		
+		var s = '',
+			first = true;
+			
+		if (Ext.isArray(data)) {
+			data.forEach(function(line) {
+				if (Ext.isString(line)) {
+					if (!first) {
+						line += '\n';
+					}
+					
+					first = false;
+					s += line;
+				}
+			});
+		}
+		
+		return s;
 	},
 	
 	getDataProperty: function(id, property, type, fallback) {
@@ -94,7 +133,27 @@ Ext.define('ED.Data', {
 		}
 	},
 	
-	updateDataProperty: function(id, property, value) {
+	setDataTextProperty: function(id, property, value) {
+		if (Ext.isString(value)) {
+			value = value.split(/\n/);
+		} else if (Ext.isArray(value)) {
+			var array = [];
+			
+			value.forEach(function(line) {
+				if (Ext.isString(line)) {
+					value.push(line);
+				}
+			});
+			
+			value = array;
+		}
+		
+		if (Ext.isArray(value)) {
+			this.setDataProperty(id, property, value);
+		}
+	},
+	
+	setDataProperty: function(id, property, value) {
 		if (Ext.isString(id) && Ext.isString(property)) {
 			var data = this.dataMap[id];
 			

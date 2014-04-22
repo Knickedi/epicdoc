@@ -3,6 +3,7 @@ Ext.onReady(function() {
     
     function load() {
         var scripts = [
+            'epiceditor',
             'func/LiveUpdater',
             'global/App',
             'global/Config',
@@ -10,6 +11,8 @@ Ext.onReady(function() {
             'global/Log',
             'util/JS',
             'view/dataidfield',
+            'view/contentwindow',
+            'view/epiceditor',
             'view/sectionwindow',
             'view/viewport'
         ];

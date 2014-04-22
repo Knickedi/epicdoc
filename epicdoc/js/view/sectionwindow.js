@@ -43,9 +43,7 @@ Ext.define('ED.view.SectionWindow', {
                 handler: Ext.bind(me.close, me)
             }],
             listeners: {
-                hide: function() {
-                    this.destroy();
-                },
+                hide: Ext.bind(me.destroy, me),
                 show: function() {
                     Ext.callback('focus', this.down('#title'), [true], 100);
                 },
@@ -72,7 +70,7 @@ Ext.define('ED.view.SectionWindow', {
         if (titleCmp.validate()/* && idCmp.validate()*/) {
             if (Ext.isString(me.dataId)) {
                 //data.updateDataId(me.dataId, id);
-                data.updateDataProperty(me.dataId, 'title', title);
+                data.setDataProperty(me.dataId, 'title', title);
             } else {
                 data.insertData({
                     id: data.generateDataId(),

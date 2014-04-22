@@ -22,13 +22,22 @@
 /* ICONS */
 
 .ed-icon-add {
-	background: url(../img/add.png);
+	background: url(../img/add.png) center no-repeat;
 }
 .ed-icon-edit {
-	background: url(../img/edit.png);
+	background: url(../img/edit.png) center no-repeat;
 }
 .ed-icon-delete {
-	background: url(../img/delete.png);
+	background: url(../img/delete.png) center no-repeat;
+}
+.ed-icon-server {
+	background: url(../img/server.png) center no-repeat;
+}
+.ed-icon-document {
+	background: url(../img/document.png) center no-repeat;
+}
+.ed-icon-folder {
+	background: url(../img/folder.png) center no-repeat;
 }
 
 /*

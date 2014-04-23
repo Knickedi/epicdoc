@@ -220,10 +220,14 @@ Ext.define('Ed.view.Viewport', {
 				},
 				listeners: {
 					drop: function (node, srcData, overModel, position) {
-						var src = srcData.records[0].raw,
-							dest = overModel.raw;
+						var dest = overModel.raw,
+							data = ED.Data,
+							append = position == 'append',
+							id = srcData.records[0].raw.dataId,
+							parentId = append ? dest.dataId : dest.dataParentId;
 						
-						ED.Data.setDataParentId(src.dataId, position == 'append' ? dest.dataId : dest.dataParentId);
+						data.setDataParentId(id, parentId);
+						data.setDataOrder(id, position, append ? null : dest.dataId);
 					}
 				}
 			},

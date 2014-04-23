@@ -82,6 +82,32 @@ Ext.define('ED.Data', {
 	},
 	
 	sortDataIds: function(ids) {
+		var me = this,
+			order = me.dataOrder,
+			lengthBefore = order.length;
+		
+		ids.sort(function(id1, id2) {
+			var idx1 = order.indexOf(id1),
+				idx2 = order.indexOf(id2);
+				
+			if (idx1 < 0 && idx2 < 0) {
+				order.push(id1, id2);
+				return -1;
+			} else if (idx1 < 0) {
+				order.push(id1);
+				return 1;
+			} else if (idx2 < 0) {
+				order.push(id2);
+				return -1;
+			} else {
+				return idx1 - idx2 < 0 ? -1 : 1;
+			}
+		});
+		
+		if (lengthBefore != order.length && ED.App.isEditable()) {
+			me.replaceRef('dataorder', order);
+			me.onDataChange();
+		}
 		
 		return ids;
 	},
@@ -187,6 +213,63 @@ Ext.define('ED.Data', {
 		}
 	},
 	
+	setDataOrder: function(id, position, refId) {
+		if (Ext.isString(id) && id != refId) {
+			var me = this,
+				data = me.dataMap[id];
+				newOrder = [],
+				order = me.dataOrder;
+			
+			if (!data) {
+				return;
+			} else if (position == 'append') {
+				var ids = me.getDataChildIds(refId);
+				
+				if (ids.length <= 1) {
+					return;
+				} else {
+					refId = ids[ids.length - 1];
+					position = 'after';
+					
+					if (ref == id) {
+						return;
+					}
+				}
+			}
+			
+			if (position == 'before' || position == 'after') {
+				var found = false;
+				
+				order.forEach(function(dataId) {
+					if (dataId == refId) {
+						if (position == 'before') {
+							newOrder.push(id, dataId);
+						} else if (position == 'after') {
+							newOrder.push(dataId, id);
+						}
+						
+						found = true;
+					} else if (dataId != id) {
+						newOrder.push(dataId);
+					}
+				});
+				
+				if (!found) {
+					newOrder.push(id);
+				}
+			} else {
+				return;
+			}
+			
+			me.dataOrder = newOrder;
+			
+			if (ED.App.isEditable()) {
+				me.replaceRef('dataorder', newOrder);
+				me.onDataChange();
+			}
+		}
+	},
+	
 	// PRIVATE ---------------------------------------------------------------------------------------
 	
 	onDataChange: function() {
@@ -216,6 +299,10 @@ Ext.define('ED.Data', {
 			ref[1] = ref[1].slice(0, index).concat(ref[1].slice(index + 1));
 		}
 	},
+	
+	replaceRef: function(type, data) {
+		this.getRef(type)[1] = data;
+	},
 
 	// INITIALIZATION --------------------------------------------------------------------------------
 	
@@ -236,6 +323,7 @@ Ext.define('ED.Data', {
 		var me = this;
 		
 		me.dataMap = {};
+		me.dataOrder = [];
 		me.dataRef;
 		me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array', []);
 		
@@ -257,7 +345,15 @@ Ext.define('ED.Data', {
 					me.dataRef = el;
 				}
 			} if (type == 'dataorder') {
+				Ext.Array.from(el[1]).forEach(function(entry) {
+					if (Ext.isString(entry)) {
+						me.dataOrder.push(entry);
+					}
+				});
 				
+				if (!me.dataorderRef) {
+					me.dataorderRef = el;
+				}
 			}
 		});
 		

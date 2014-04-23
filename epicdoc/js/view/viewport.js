@@ -128,6 +128,18 @@ Ext.define('Ed.view.Viewport', {
 		}]);
 	},
 	
+	setEditable: function(editable) {
+		this.query('[edEditable]').forEach(function(cmp) {
+			Ext.callback('setVisible', cmp, [editable]);
+		});
+		
+		this.query('treepanel').forEach(function(tree) {
+			Ext.Array.findBy(tree.view.plugins, function(p) {
+				return p.ptype == 'treeviewdragdrop';
+			}).dragZone[editable ? 'unlock' : 'lock']();
+		});
+	},
+	
 	setupViewUpdatesByEvents: function() {
 		var me = this,
 			data = ED.Data,
@@ -139,6 +151,14 @@ Ext.define('Ed.view.Viewport', {
 		me.mon(data, 'datainsert', function(id, data) {
 			if (data.type == 'section') {
 				menu.add(me.createSectionItem(id));
+			} else {
+				var tree = menu.items.first(),
+					parentId = data.parentId,
+					node = parentId == tree.dataId ? tree.getRootNode() : tree.getStore().getNodeById(parentId);
+					
+				if (node) {
+					node.appendChild(me.createTreeNode(id));
+				}
 			}
 		});
 		
@@ -193,8 +213,29 @@ Ext.define('Ed.view.Viewport', {
 			root: {
 				children: me.createTreeNodeChildren(id)
 			},
+			viewConfig: {
+				plugins: {
+					ptype: 'treeviewdragdrop',
+					ddGroup: 'treednd'
+				},
+				listeners: {
+					drop: function (node, srcData, overModel, position) {
+						var src = srcData.records[0].raw,
+							dest = overModel.raw;
+						
+						ED.Data.setDataParentId(src.dataId, position == 'append' ? dest.dataId : dest.dataParentId);
+					}
+				}
+			},
 			listeners: {
 				render: function(tree) {
+					// we disable DND for now until the app becomes editable
+					Ext.defer(function() {
+						Ext.Array.findBy(tree.view.plugins, function(p) {
+							return p.ptype == 'treeviewdragdrop';
+						}).dragZone.lock();
+					}, 1);
+					
 					Ext.get(tree.el.query('.x-panel-header')[0]).on('contextmenu', function(e) {
 						if (ED.App.isEditable()) {
 							me.createTreePanelHeaderContextMenu(tree, this.el, e);
@@ -214,35 +255,55 @@ Ext.define('Ed.view.Viewport', {
 				},
 				itemclick: function(tree, record, item, index, e) {
 					me.nodeClick(tree, record, e);
+				},
+				expand: function() {
+					var id = me.down('#content').dataId;
+					
+					if (id) {
+						this.getSelectionModel().select(this.getStore().getNodeById(id));
+					}
+				},
+				collapse: function() {
+					this.getSelectionModel().deselectAll();
 				}
 			}
 		}
 	},
 	
-	createTreeNodeChildren: function(parentId) {
+	createTreeNode: function(id) {
 		var me = this,
 			data = ED.Data,
+			type = data.getDataProperty(id, 'type');
+			
+		var node = {
+			id: id,
+			dataId: id,
+			dataType: type,
+			dataParentId: data.getDataParentId(id),
+			text: data.getDataProperty(id, 'title')
+		};
+
+		if (type == 'text') {
+			node.leaf = true;
+			node.iconCls = 'ed-icon-document';
+		}
+
+		if (type == 'folder') {
+			node.children = me.createTreeNodeChildren(id);
+			node.iconCls = 'ed-icon-tree-folder';
+			node.leaf = false;
+			node.expanded = true;
+		}
+		
+		return node;
+	},
+	
+	createTreeNodeChildren: function(parentId) {
+		var me = this,
 			children = [];
 		
-		data.getDataChildrenIds(parentId).forEach(function(id) {
-			var node = {
-				dataId: id,
-				dataParentId: parentId,
-				text: data.getDataProperty(id, 'title')
-			};
-			var type = data.getDataProperty(id, 'type');
-			
-			if (type == 'text') {
-				node.leaf = true;
-				node.iconCls = 'ed-icon-document';
-			}
-			
-			if (type == 'folder') {
-				node.children = me.createTreeNodeChildren(id);
-				node.iconCls = 'ed-icon-folder';
-			}
-			
-			children.push(node);
+		ED.Data.getDataChildIds(parentId).forEach(function(id) {
+			children.push(me.createTreeNode(id));
 		});
 		
 		return children;

@@ -17,7 +17,11 @@ Ext.define('ED.Data', {
 		return Ext.Object.getKeys(this.dataMap);
 	},
 	
-	getDataChildrenIds: function(parentId) {
+	getDataParentId: function(id) {
+		return this.getDataProperty(id, 'parentId', 'string');
+	},
+	
+	getDataChildIds: function(parentId) {
 		var ids = [],
 			map = this.dataMap;
 		
@@ -96,8 +100,12 @@ Ext.define('ED.Data', {
 			delete me.dataMap[id];
 			
 			if (data) {
+				me.getDataChildIds(id).forEach(function(id) {
+					me.removeDataId(id, true);
+				});
+				
 				me.removeFromRef('data', data);
-				me.fireEvent('dataremove', id, data, isRecursive);
+				me.fireEvent('dataremove', id, data, !!isRecursive);
 				
 				if (!isRecursive) {
 					me.onDataChange();
@@ -115,6 +123,19 @@ Ext.define('ED.Data', {
 			me.pushToRef('data', data);
 			me.fireEvent('datainsert', data.id, data);
 			me.onDataChange();
+		}
+	},
+	
+	setDataParentId: function(id, parentId) {
+		if (Ext.isString(id) && Ext.isString(parentId)) {
+			var map = this.dataMap,
+				data = map[id],
+				parentData = map[parentId];
+			
+			if (data && parentData && data.parentId != parentId) {
+				this.fireEvent('dataparentchange', id, data.parentId, data.parentId = parentId);
+				this.onDataChange();
+			}
 		}
 	},
 	

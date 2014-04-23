@@ -51,6 +51,12 @@ Ext.define('ED.view.ContentWindow', {
                 show: function() {
                     Ext.callback('focus', this.down('#title'), [true], 100);
                 },
+                afterrender: function() {
+                    me.keyNav = Ext.create('Ext.util.KeyNav', me.el, {                    
+                        enter: me.save,
+                        scope: me
+                    });
+                }
             }
         })]);
     },
@@ -71,6 +77,7 @@ Ext.define('ED.view.ContentWindow', {
                 type: me.form('type').getValue(),
                 title: me.form('title').getValue()
             })
+            
             me.close();
         }
     }

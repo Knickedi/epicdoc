@@ -47,11 +47,7 @@ Ext.define('ED.App', {
 			delete me.editable[type];
 		}
 		
-		editable = me.isEditable();
-		
-		Ext.ComponentQuery.query('[edEditable]').forEach(function(cmp) {
-			Ext.callback('setVisible', cmp, [editable]);
-		});
+		me.viewport.setEditable(me.isEditable());
 	},
 	
 	updateLanguage: function(callback) {

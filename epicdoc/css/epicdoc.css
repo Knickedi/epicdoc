@@ -36,8 +36,11 @@
 .ed-icon-document {
 	background: url(../img/document.png) center no-repeat;
 }
-.ed-icon-folder {
-	background: url(../img/folder.png) center no-repeat;
+.ed-icon-tree-folder {
+	background: url(../img/folder-close.png) center no-repeat !important;
+}
+.x-grid-tree-node-expanded .ed-icon-tree-folder {
+	background: url(../img/folder-open.png) center no-repeat !important;
 }
 
 /*

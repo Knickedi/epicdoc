@@ -14,6 +14,7 @@ Ext.onReady(function() {
             'util/JS',
             'view/edit.sectionwindow',
             'view/epiceditor',
+            'view/licensewindow',
             'view/new.contentwindow',
             'view/new.sectionwindow',
             'view/viewport'

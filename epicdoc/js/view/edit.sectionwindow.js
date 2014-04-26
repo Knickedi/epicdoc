@@ -18,6 +18,7 @@ Ext.define('ED.view.EditSectionWindow', {
         me.callParent([Ext.apply(cfg || {}, {
             modal: true,
             title: ED.lang.section,
+            closeAction: 'destroy',
             layout: {
                 type: 'vbox',
                 align: 'stretch',
@@ -42,7 +43,6 @@ Ext.define('ED.view.EditSectionWindow', {
                 handler: Ext.bind(me.close, me)
             }],
             listeners: {
-                hide: Ext.bind(me.destroy, me),
                 show: function() {
                     Ext.callback('focus', this.down('#title'), [true], 100);
                 },

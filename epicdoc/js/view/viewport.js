@@ -71,6 +71,19 @@ Ext.define('Ed.view.Viewport', {
 						handler: function() {
 							ED.func.LiveUpdater.testForLocalServer();
 						}
+					}, '->', {
+						xtype: 'displayfield',
+						value: ED.lang.license,
+						cls: 'ed-header-license',
+						listeners: {
+							render: function() {
+								this.el.on('click', function() {
+									Ext.widget('edlicensewindow', {
+										animateTarget: this.el
+									}).show();
+								});
+							}
+						}
 					}]
 				}, {
 					xtype: 'textfield',

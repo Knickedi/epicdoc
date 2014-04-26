@@ -194,7 +194,11 @@ Ext.define('ED.view.EpicEditor', {
 		node.addCls('epiceditor-preview');
 		
 		el.update('');
-		el.appendChild(me.editBtn);
+		
+		if (me.editable !== false && ED.App.isEditable()) {
+			el.appendChild(me.editBtn);
+		}
+		
 		el.appendChild(node);
 		
 		me.minHeight = node.getHeight();

@@ -18,6 +18,11 @@
 	color: white;
 	font-size: 14px;
 }
+.ed-header-license .x-form-display-field {
+	color: #ddd;
+	text-decoration: underline;
+	cursor: pointer;
+}
 
 /* ICONS */
 

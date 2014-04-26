@@ -10,6 +10,7 @@ ED.lang = Ext.apply(ED.lang || {}, {
     codeClassFunction: 'Code / Class / Functions',
     type: 'Type',
     folder: 'Folder',
+    license: 'License',
     
     add: 'Add',
     ok: 'OK',

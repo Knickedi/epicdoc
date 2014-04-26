@@ -58,7 +58,7 @@ Ext.define('Ed.view.Viewport', {
 						hidden: true,
 						tooltip: ED.lang.add,
 						handler: function() {
-							Ext.widget('edsectionwindow', {
+							Ext.widget('ednewsectionwindow', {
 								animateTarget: this.el
 							}).show();
 						}
@@ -104,6 +104,8 @@ Ext.define('Ed.view.Viewport', {
 					id: 'content',
 					minWidth: 600,
 					border: false,
+					overflowY: 'auto',
+					bodyPadding: 10,
 					flex: 1,
 					maintainFlex: true,
 					layout: 'fit'
@@ -152,9 +154,14 @@ Ext.define('Ed.view.Viewport', {
 			if (data.type == 'section') {
 				menu.add(me.createSectionItem(id));
 			} else {
-				var tree = menu.items.first(),
-					parentId = data.parentId,
-					node = parentId == tree.dataId ? tree.getRootNode() : tree.getStore().getNodeById(parentId);
+				var node,
+					parentId = data.parentId;
+				
+				menu.items.each(function(tree) {
+					if (!node) {
+						node = parentId == tree.dataId ? tree.getRootNode() : tree.getStore().getNodeById(parentId);
+					}
+				});
 					
 				if (node) {
 					node.appendChild(me.createTreeNode(id));
@@ -162,7 +169,19 @@ Ext.define('Ed.view.Viewport', {
 			}
 		});
 		
-		me.mon(data, 'dataremove', function(id, data) {
+		me.mon(data, 'dataremove', function(id, data, recursion) {
+			if (recursion) {
+				return;
+			}
+			
+			menu.items.each(function(tree) {
+				var node = tree.getStore().getNodeById(id);
+				
+				if (node) {
+					node.parentNode.removeChild(node);
+				}
+			});
+			
 			menuDataIdComponents().forEach(function(cmp) {
 				if (cmp.dataId == id) {
 					cmp.ownerCt.remove(cmp);
@@ -205,12 +224,26 @@ Ext.define('Ed.view.Viewport', {
 		var me = this,
 			data = ED.Data;
 			
+		// tree view is inserting a horizontal scrollbar if the root node has no children
+		// there's a div under a the table which has "left:9999px" causing that (why?)
+		// we find that div and set left to 0px
+		// we have to defer it otherwise the div won't be there yet on first render...
+		var fixEmptyTree = function(tree) {
+			Ext.defer(function() {
+				if (tree.getRootNode().childNodes.length == 0) {
+					tree.el.select('div:prev(table)').applyStyles({ left: '0px' });
+				}
+			}, 1);
+		};
+			
 		return {
 			xtype: 'treepanel',
+			useArrows: true,
 			dataId: id,
 			title: data.getDataProperty(id, 'title'),
 			rootVisible: false,
 			root: {
+				expanded: true,
 				children: me.createTreeNodeChildren(id)
 			},
 			viewConfig: {
@@ -228,6 +261,9 @@ Ext.define('Ed.view.Viewport', {
 						
 						data.setDataParentId(id, parentId);
 						data.setDataOrder(id, position, append ? null : dest.dataId);
+					},
+					viewready: function() {
+						fixEmptyTree(this.ownerCt);
 					}
 				}
 			},
@@ -251,7 +287,7 @@ Ext.define('Ed.view.Viewport', {
 				},
 				itemcontextmenu: function(tree, record, item, index, e) {
 					if (ED.App.isEditable()) {
-						me.createNodeContextMenu(tree, record, e);
+						me.createNodeContextMenu(tree, record, item, e);
 
 						e.stopEvent();
 						return false;
@@ -269,15 +305,18 @@ Ext.define('Ed.view.Viewport', {
 				},
 				collapse: function() {
 					this.getSelectionModel().deselectAll();
+				},
+				itemremove: function() {
+					fixEmptyTree(this);
 				}
 			}
-		}
+		};
 	},
 	
 	createTreeNode: function(id) {
 		var me = this,
 			data = ED.Data,
-			type = data.getDataProperty(id, 'type');
+			type = data.getDataType(id);
 			
 		var node = {
 			id: id,
@@ -290,9 +329,10 @@ Ext.define('Ed.view.Viewport', {
 		if (type == 'text') {
 			node.leaf = true;
 			node.iconCls = 'ed-icon-document';
-		}
-
-		if (type == 'folder') {
+		} else if (type == 'code') {
+			node.leaf = true;
+			node.iconCls = 'ed-icon-code';
+		} else if (type == 'folder') {
 			node.children = me.createTreeNodeChildren(id);
 			node.iconCls = 'ed-icon-tree-folder';
 			node.leaf = false;
@@ -314,7 +354,9 @@ Ext.define('Ed.view.Viewport', {
 	},
 	
 	createTreePanelHeaderContextMenu: function(tree, headerEl, e) {
-		var data = ED.Data,
+		var me = this,
+			data = ED.Data,
+			id = tree.dataId,
 			sectionsIds = data.getSectionDataIds(),
 			items = [];
 
@@ -322,49 +364,49 @@ Ext.define('Ed.view.Viewport', {
 			text: ED.lang.add,
 			iconCls: 'ed-icon-add',
 			handler: function() {
-				Ext.widget('edcontentwindow', {
+				Ext.widget('ednewcontentwindow', {
 					animateTarget: headerEl,
-					dataId: tree.dataId
+					dataId: id
 				}).show();
 			},
 		}, {
 			text: ED.lang.edit,
 			iconCls: 'ed-icon-edit',
 			handler: function() {
-				Ext.widget('edsectionwindow', {
+				Ext.widget('ededitsectionwindow', {
 					animateTarget: headerEl,
-					dataId: tree.dataId,
-					dataTitle: data.getDataProperty(tree.dataId, 'title')
+					dataId: id
 				}).show();
 			}
 
 		}, {
 			text: ED.lang.delete,
 			iconCls: 'ed-icon-delete',
-			handler: function() {
-				Ext.Msg.confirm({
-					animateTarget: headerEl,
-					title: ED.lang.delete + '?',
-					icon: Ext.Msg.QUESTION,
-					msg: ED.lang.deleteConfirm,
-					buttons: Ext.Msg.YESNO,
-					callback: function(btn) {
-						if (btn == 'yes') {
-							data.removeDataId(tree.dataId);
-						}
-					}
-				});
-			},
+			handler: me.deleteDataWithConfirmFn(id, headerEl),
 		});
 
 		Ext.create('Ext.menu.Menu', { items: items }).showAt(e.getXY());
 	},
 	
-	createNodeContextMenu: function(tree, record, e) {
-		var items = [];
+	createNodeContextMenu: function(tree, record, item, e) {
+		var me = this,
+			items = [],
+			id = record.raw.dataId;
+			type = ED.Data.getDataType();
 		
 		items.push({
-			text: 'boing'
+			text: ED.lang.edit,
+			iconCls: 'ed-icon-edit',
+			handler: function() {
+				Ext.widget('ededit' + type + 'window', {
+					animateTarget: item,
+					dataId: id,
+				}).show();
+			}
+		}, {
+			text: ED.lang.delete,
+			iconCls: 'ed-icon-delete',
+			handler: me.deleteDataWithConfirmFn(id, item),
 		});
 		
 		Ext.create('Ext.menu.Menu', { items: items }).showAt(e.getXY());
@@ -375,7 +417,7 @@ Ext.define('Ed.view.Viewport', {
 			id = record.raw.dataId,
 			content = me.down('#content'),
 			data = ED.Data,
-			type = data.getDataProperty(id, 'type');
+			type = data.getDataType(id);
 		
 		if (type == 'text') {
 			content.removeAll();
@@ -383,7 +425,6 @@ Ext.define('Ed.view.Viewport', {
 			content.add({
 				xtype: 'edepiceditor',
 				dataId: id,
-				margin: 10,
 				content: data.getDataTextProperty(id, 'content'),
 				callback: function(content) {
 					data.setDataTextProperty(id, 'content', content);
@@ -391,4 +432,21 @@ Ext.define('Ed.view.Viewport', {
 			});
 		}
 	},
+	
+	deleteDataWithConfirmFn: function(id, targetEl) {
+		return function() {
+			Ext.Msg.confirm({
+				animateTarget: targetEl,
+				title: ED.lang.delete + '?',
+				icon: Ext.Msg.QUESTION,
+				msg: ED.lang.deleteConfirm,
+				buttons: Ext.Msg.YESNO,
+				callback: function(btn) {
+					if (btn == 'yes') {
+						ED.Data.removeDataId(id);
+					}
+				}
+			});
+		};
+	}
 });

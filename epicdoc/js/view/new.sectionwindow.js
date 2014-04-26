@@ -1,19 +1,19 @@
 
-Ext.define('ED.view.ContentWindow', {
+Ext.define('ED.view.NewSectionWindow', {
     
     // ATTRIBUTES ---------------------------------------------------------------------------------
     
     extend: 'Ext.window.Window',
-    alias: 'widget.edcontentwindow',
+    alias: 'widget.ednewsectionwindow',
     
     // PRIVATE ------------------------------------------------------------------------------------
     
     constructor: function(cfg) {
         var me = this;
         
-        me.callParent([Ext.apply(cfg, {
+        me.callParent([Ext.apply(cfg || {}, {
             modal: true,
-            title: ED.lang.content,
+            title: ED.lang.section,
             layout: {
                 type: 'vbox',
                 align: 'stretch',
@@ -25,19 +25,10 @@ Ext.define('ED.view.ContentWindow', {
             },
             items: [{
                 xtype: 'textfield',
+                allowBlank: false,
                 itemId: 'title',
                 fieldLabel: ED.lang.title,
-                allowBlank: false
-            }, {
-                xtype: 'combobox',
-                itemId: 'type',
-                fieldLabel: ED.lang.type,
-                editable: false,
-                value: 'text',
-                store: [
-                    ['folder', ED.lang.folder],
-                    ['text', ED.lang.text]
-                ]
+                value: cfg.dataTitle
             }],
             buttons: [{
                 text: ED.lang.ok,
@@ -51,34 +42,33 @@ Ext.define('ED.view.ContentWindow', {
                 show: function() {
                     Ext.callback('focus', this.down('#title'), [true], 100);
                 },
-                afterrender: function() {
+                afterRender: function(thisForm, options){
+                    var me = this;
+                    
                     me.keyNav = Ext.create('Ext.util.KeyNav', me.el, {                    
                         enter: me.save,
                         scope: me
                     });
                 }
-            }
+            },
         })]);
-    },
-    
-    form: function(name) {
-        return this.down('#' + name);
     },
     
     save: function() {
         var me = this;
+            titleCmp = me.down('#title'),
+            title = titleCmp.getValue(),
+            data = ED.Data;
         
-        if (me.form('title').isValid()) {
-            var data = ED.Data;
-            
+        if (titleCmp.validate()) {
             data.insertData({
                 id: data.generateDataId(),
-                parentId: me.dataId,
-                type: me.form('type').getValue(),
-                title: me.form('title').getValue()
-            })
+                type: 'section',
+                title: title
+            });
             
             me.close();
         }
     }
+    
 });

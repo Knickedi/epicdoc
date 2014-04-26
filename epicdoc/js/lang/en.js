@@ -7,6 +7,7 @@ ED.lang = Ext.apply(ED.lang || {}, {
     id: 'ID',
     title: 'Title',
     text: 'Text',
+    codeClassFunction: 'Code / Class / Functions',
     type: 'Type',
     folder: 'Folder',
     

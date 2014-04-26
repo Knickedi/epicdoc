@@ -73,6 +73,10 @@ Ext.define('ED.Data', {
 		return s;
 	},
 	
+	getDataType: function(id) {
+		return this.getDataProperty(id, 'type');
+	},
+	
 	getDataProperty: function(id, property, type, fallback) {
 		if (Ext.isString(id) && Ext.isString(property)) {
 			return ED.util.JS.getValue(this.dataMap[id], property, type, fallback);
@@ -181,22 +185,25 @@ Ext.define('ED.Data', {
 	},
 	
 	setDataTextProperty: function(id, property, value) {
-		if (Ext.isString(value)) {
-			value = value.split(/\n/);
-		} else if (Ext.isArray(value)) {
-			var array = [];
-			
-			value.forEach(function(line) {
-				if (Ext.isString(line)) {
-					value.push(line);
-				}
-			});
-			
-			value = array;
-		}
-		
-		if (Ext.isArray(value)) {
-			this.setDataProperty(id, property, value);
+		if (Ext.isString(property)) {
+			if (Ext.isString(value)) {
+				value = value.split(/\n/);
+			} else if (Ext.isArray(value)) {
+				var array = [];
+
+				value.forEach(function(line) {
+					if (Ext.isString(line)) {
+						value.push(line);
+					}
+				});
+
+				value = array;
+			}
+
+			if (Ext.isArray(value)) {
+				this.setDataProperty(id, property + 'modified', new Date());
+				this.setDataProperty(id, property, value);
+			}
 		}
 	},
 	
@@ -302,6 +309,10 @@ Ext.define('ED.Data', {
 	
 	replaceRef: function(type, data) {
 		this.getRef(type)[1] = data;
+	},
+	
+	removeDataOrderDuplicates: function() {
+		
 	},
 
 	// INITIALIZATION --------------------------------------------------------------------------------

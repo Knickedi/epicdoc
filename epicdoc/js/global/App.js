@@ -104,6 +104,10 @@ Ext.define('ED.App', {
 	init: function() {
 		var me = this;
 		
+		// browsers have a strange behaviour when selecting text
+		// the scroll the viewport (the whole HTML-body) out of bounds, we avoid that
+		Ext.get(window).on('scroll', function() { window.scrollTo(0, 0); });
+		
 		me.debug = !!(window.epicconfig && window.epicconfig.debug);
 		ED.Log.d('Initializing application');
 		

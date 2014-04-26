@@ -36,6 +36,9 @@
 .ed-icon-document {
 	background: url(../img/document.png) center no-repeat;
 }
+.ed-icon-code {
+	background: url(../img/code.png) center no-repeat;
+}
 .ed-icon-tree-folder {
 	background: url(../img/folder-close.png) center no-repeat !important;
 }

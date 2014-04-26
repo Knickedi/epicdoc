@@ -3,6 +3,8 @@ Ext.onReady(function() {
     
     function load() {
         var scripts = [
+            //'lawnchair',
+            //'lawnchair.indexeddb',
             'epiceditor',
             'func/LiveUpdater',
             'global/App',
@@ -10,10 +12,10 @@ Ext.onReady(function() {
             'global/Data',
             'global/Log',
             'util/JS',
-            'view/dataidfield',
-            'view/contentwindow',
+            'view/edit.sectionwindow',
             'view/epiceditor',
-            'view/sectionwindow',
+            'view/new.contentwindow',
+            'view/new.sectionwindow',
             'view/viewport'
         ];
         

@@ -1,19 +1,19 @@
 
-Ext.define('ED.view.SectionWindow', {
+Ext.define('ED.view.NewContentWindow', {
     
     // ATTRIBUTES ---------------------------------------------------------------------------------
     
     extend: 'Ext.window.Window',
-    alias: 'widget.edsectionwindow',
+    alias: 'widget.ednewcontentwindow',
     
     // PRIVATE ------------------------------------------------------------------------------------
     
     constructor: function(cfg) {
         var me = this;
         
-        me.callParent([Ext.apply(cfg || {}, {
+        me.callParent([Ext.apply(cfg, {
             modal: true,
-            title: ED.lang.section,
+            title: ED.lang.content,
             layout: {
                 type: 'vbox',
                 align: 'stretch',
@@ -25,15 +25,20 @@ Ext.define('ED.view.SectionWindow', {
             },
             items: [{
                 xtype: 'textfield',
-                allowBlank: false,
                 itemId: 'title',
                 fieldLabel: ED.lang.title,
-                value: cfg.dataTitle
-            /*}, {
-                xtype: 'eddataidfield',
-                itemId: 'id',
-                dataId: cfg.dataId,
-                fieldLabel: ED.lang.id*/
+                allowBlank: false
+            }, {
+                xtype: 'combobox',
+                itemId: 'type',
+                fieldLabel: ED.lang.type,
+                editable: false,
+                value: 'text',
+                store: [
+                    ['folder', ED.lang.folder],
+                    ['text', ED.lang.text],
+                    ['code', ED.lang.codeClassFunction]
+                ]
             }],
             buttons: [{
                 text: ED.lang.ok,
@@ -47,40 +52,34 @@ Ext.define('ED.view.SectionWindow', {
                 show: function() {
                     Ext.callback('focus', this.down('#title'), [true], 100);
                 },
-                afterRender: function(thisForm, options){
-                    var me = this;
-                    
+                afterrender: function() {
                     me.keyNav = Ext.create('Ext.util.KeyNav', me.el, {                    
                         enter: me.save,
                         scope: me
                     });
                 }
-            },
+            }
         })]);
+    },
+    
+    form: function(name) {
+        return this.down('#' + name);
     },
     
     save: function() {
         var me = this;
-            titleCmp = me.down('#title'),
-            //idCmp = me.down('#id'),
-            //id = idCmp.getValue(),
-            title = titleCmp.getValue(),
-            data = ED.Data;
         
-        if (titleCmp.validate()/* && idCmp.validate()*/) {
-            if (Ext.isString(me.dataId)) {
-                //data.updateDataId(me.dataId, id);
-                data.setDataProperty(me.dataId, 'title', title);
-            } else {
-                data.insertData({
-                    id: data.generateDataId(),
-                    type: 'section',
-                    title: title
-                });
-            }
+        if (me.form('title').isValid()) {
+            var data = ED.Data;
+            
+            data.insertData({
+                id: data.generateDataId(),
+                parentId: me.dataId,
+                type: me.form('type').getValue(),
+                title: me.form('title').getValue()
+            })
             
             me.close();
         }
     }
-    
 });

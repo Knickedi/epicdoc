@@ -61,7 +61,7 @@ Ext.define('ED.Data', {
 			data.forEach(function(line) {
 				if (Ext.isString(line)) {
 					if (!first) {
-						line += '\n';
+						s += '\n';
 					}
 					
 					first = false;

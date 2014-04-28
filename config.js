@@ -9,11 +9,9 @@ epicconfig = {
 	
 	
 	
-	liveUpdater: {
+	server: {
 	
 		disabled: false,
-		
-		url: 'http://localhost:54321',
 		
 	}
 };

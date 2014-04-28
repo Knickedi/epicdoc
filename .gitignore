@@ -1,3 +1,4 @@
-/epicdoc-server-node/.settings
-/epicdoc-server-node/node_modules
+/epicdoc-server/.settings
+/epicdoc-server/.project
+/epicdoc-server/node_modules
 /data.js

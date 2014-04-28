@@ -1,0 +1,78 @@
+
+/* VIEWPORT HEADER */
+
+.ed-splitter,
+.ed-header-toolbar,
+.ed-header > .x-panel-body-default {
+	background-color: #157fcc !important;
+}
+.ed-header-title {
+	margin-bottom: 4px !important;
+}
+.ed-header-title .x-form-display-field {
+	color: white;
+	font-weight: bold;
+	font-size: 28px;
+}
+.ed-header-subtitle .x-form-display-field {
+	color: white;
+	font-size: 14px;
+}
+.ed-header-license .x-form-display-field {
+	color: #ddd;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* CODE PANEL */
+
+.ed-code-toolbar {
+	background-color: #e6f1f9;
+}
+
+/* ICONS */
+
+.ed-icon-add {
+	background: url(../img/add.png) center no-repeat;
+}
+.ed-icon-edit {
+	background: url(../img/edit.png) center no-repeat;
+}
+.ed-icon-delete {
+	background: url(../img/delete.png) center no-repeat;
+}
+.ed-icon-server {
+	background: url(../img/server.png) center no-repeat;
+}
+.ed-icon-document {
+	background: url(../img/document.png) center no-repeat;
+}
+.ed-icon-code {
+	background: url(../img/code.png) center no-repeat;
+}
+.ed-icon-tree-folder {
+	background: url(../img/folder-close.png) center no-repeat !important;
+}
+.x-grid-tree-node-expanded .ed-icon-tree-folder {
+	background: url(../img/folder-open.png) center no-repeat !important;
+}
+
+/*
+.white-color {
+	color: white; 
+}
+.move-icon {
+	background: url(../image/move.png);
+}
+.remove-icon {
+	background: url(../image/remove.png);
+}
+.document-icon {
+	background: url(../image/document.png) center no-repeat !important;
+}
+.folder-icon {
+	background: url(../image/folder.png) center no-repeat !important;
+}
+.x-tool-add-icon {
+	background: url(../image/add.png) !important;
+}*/

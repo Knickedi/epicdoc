@@ -18,6 +18,7 @@ ED.lang = Ext.apply(ED.lang || {}, {
     edit: 'Edit',
     delete: 'Delete',
     save: 'Save',
+    addGroup: 'Add group',
     
     markdownLiveEditor: 'Markdown Live Editor',
     

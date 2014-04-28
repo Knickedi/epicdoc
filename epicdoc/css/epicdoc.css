@@ -24,6 +24,12 @@
 	cursor: pointer;
 }
 
+/* CODE PANEL */
+
+.ed-code-toolbar {
+	background-color: #e6f1f9;
+}
+
 /* ICONS */
 
 .ed-icon-add {

@@ -437,12 +437,18 @@ Ext.define('Ed.view.Viewport', {
 			content.dataId = id;
 			content.add({
 				xtype: 'edepiceditor',
-				dataId: id,
 				content: data.getDataTextProperty(id, 'content'),
 				callback: function(content) {
 					data.setDataTextProperty(id, 'content', content);
 				}
 			});
+		} else if (type == 'code') {
+			content.removeAll();
+			content.dataId = id;
+			content.add({
+				xtype: 'edcodepanel',
+				dataId: id
+			})
 		}
 	},
 	

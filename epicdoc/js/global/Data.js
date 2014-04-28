@@ -138,6 +138,7 @@ Ext.define('ED.Data', {
 				me.fireEvent('dataremove', id, data, !!isRecursive);
 				
 				if (!isRecursive) {
+					me.cleanupDataOrderEntries();
 					me.onDataChange();
 				}
 			}
@@ -311,7 +312,9 @@ Ext.define('ED.Data', {
 		this.getRef(type)[1] = data;
 	},
 	
-	removeDataOrderDuplicates: function() {
+	cleanupDataOrderEntries: function() {
+		var me = this;
+		
 		
 	},
 

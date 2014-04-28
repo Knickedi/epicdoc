@@ -14,7 +14,7 @@ epicdata = [
                 "type": "text",
                 "title": "What is EpicDoc?",
                 "created": "2014-04-28T12:46:39",
-                "contentmodified": "2014-04-28T16:06:23",
+                "contentmodified": "2014-04-28T16:50:53",
                 "content": [
                     "## What is EpicDoc?",
                     "",
@@ -30,7 +30,7 @@ epicdata = [
                     " * `data.js` contains your whole documentation (besides custom resources you include, e.g. this picture)",
                     " * if you want to modify the content you can start the `node.js web server` and documentation becomes live (we have to overcome some limitations with a local web server because a pure HTML application is not capable to do everything it wants to, especially filesystem operations)",
                     "",
-                    "That's it. That's the basic idea. Everything else is built on top of that. Looks complicated but actually it's easy: Open `index.html` and read the content. If you want to modify the content, kick of the included server start.",
+                    "That's it. That's the basic idea. Everything else is built on top of that. Looks complicated but actually it's easy: Open `index.html` and read the content. If you want to modify the content, kick of the included server start writing content.",
                     ""
                 ]
             },

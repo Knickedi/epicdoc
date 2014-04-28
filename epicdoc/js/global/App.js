@@ -89,6 +89,8 @@ Ext.define('ED.App', {
 			me.viewport.destory();
 		}
 		
+		document.title = me.getTitle() + (me.getSubTitle() ? ' | ' + me.getSubTitle() : '');
+		
 		ED.Log.d('Creating application view')
 		me.viewport = Ext.widget('edviewport');
 	},

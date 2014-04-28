@@ -5,15 +5,15 @@ epicconfig = {
 	
 	readonly: false,
 	
-	language: 'de',
+	language: 'en',
+	
+	
 	
 	liveUpdater: {
+	
+		disabled: false,
 		
-		testUrl: 'http://localhost:54321/LiveUpdater/Test',
-		
-		updateUrl: 'http://localhost:54321/LiveUpdater/Update',
-		
-		dataPath: '../data.js'
+		url: 'http://localhost:54321',
 		
 	}
 };

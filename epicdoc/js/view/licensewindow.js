@@ -26,8 +26,9 @@ Ext.define('ED.view.LicenseWindow', {
                 editable: false,
                 content: [
                     '## ' + ED.App.appTitle + ' v' + ED.App.appVersion,
-                    '[EpicDoc](#projectlinkmissing) is meant to be OpenSource under [GPL3](http://www.gnu.org/licenses/gpl-3.0.html) conditions.  ',
-                    'CopyRight (c) 2014 Viktor Reiser &lt;<a href="mailto:viktorreiser@gmx.de">viktorreiser@gmx.de</a>&gt;',
+                    '[EpicDoc](https://github.com/Knickedi/epicdoc) is meant to be OpenSource under [GPL3](http://www.gnu.org/licenses/gpl-3.0.html) conditions.  ',
+                    'CopyRight (c) 2014 Viktor Reiser &lt;<a href="mailto:viktorreiser@gmx.de">viktorreiser@gmx.de</a>&gt;  ',
+                    'You can contact the developers, contribute to the project or report bugs on [GitHub](https://github.com/Knickedi/epicdoc/issues).',
                     '',
                     'Sincere thanks to Oscar Godson for [EpicEditor](https://github.com/OscarGodson/EpicEditor) and all authors of [Ext JS](http://www.sencha.com/products/extjs/).',
                     '',

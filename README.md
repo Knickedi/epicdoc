@@ -7,7 +7,7 @@ It's an enhanced and standalone wiki system based on web technologies without ha
 Just take a look here: [EpicDoc documentation](http://knickedi.github.io/epicdoc/)  
 &nbsp;  
 
-*The project is in the initial phase and pretty much alpha right now.*
+*This project is in the initial phase and pretty much alpha right now.*
 
-If you like the idea, you're very welcome to join. Every help is appreciated ;-)  
+If you like the idea, you're very welcome to join. Help is  very appreciated ;-)  
 As long as I'm the only person the progress will be very slow (I'm developing in my spare time) and this tool will be developed the way it fits my needs the most :-P

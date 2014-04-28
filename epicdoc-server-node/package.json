@@ -4,12 +4,18 @@
   "description": "EpicDoc Server",
   "main": "epicdoc-server.js",
   "dependencies": {
-    "optimist": "~0.6.1"
+    "optimist": "~0.6.1",
+	"node-zip": "~1.1.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Viktor Reiser",
-  "license": "MIT"
+  "author": "Viktor Reiser <viktorreiser@gmx.de>",
+  "license": "GPL3",
+  "repository" :
+  { 
+    "type" : "git",
+    "url" : "https://github.com/Knickedi/epicdoc/tree/master/epicdoc-server-node"
+  }
 }

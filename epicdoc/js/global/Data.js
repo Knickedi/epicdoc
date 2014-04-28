@@ -313,9 +313,20 @@ Ext.define('ED.Data', {
 	},
 	
 	cleanupDataOrderEntries: function() {
-		var me = this;
+		var me = this,
+			order = me.dataOrder,
+			newOrder = [];
 		
+		order.forEach(function(id) {
+			if (Ext.isString(id) && me.dataMap[id] && newOrder.index(id) == -1) {
+				newOrder.push(id);
+			}
+		});
 		
+		if (order.length != newOrder) {
+			me.replaceRef('dataorder', me.dataOrder = newOrder);
+			me.onDataChange();
+		}
 	},
 
 	// INITIALIZATION --------------------------------------------------------------------------------

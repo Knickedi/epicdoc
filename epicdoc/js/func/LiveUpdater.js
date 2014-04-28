@@ -16,7 +16,7 @@ Ext.define('ED.func.LiveUpdater', {
         }
         
         Ext.Ajax.request({
-			url: me.testUrl,
+			url: me.url + '/test',
 			success: function(response) {
 				if (response && response.responseText == 'EpicDoc-Test') {
 					ED.Log.d('LiveUpdater server test successful');
@@ -43,14 +43,14 @@ Ext.define('ED.func.LiveUpdater', {
 		clearTimeout(me.timerId);
 		
 		Ext.Ajax.request({
-			url: me.updateUrl,
+			url: me.url + '/data',
 			method: 'POST',          
 			params: {
 				data: Ext.encode(ED.Data.getRawData()),
 				path: me.dataPath
 			},
 			success: function(response) {
-				if (response && response.responseText == 'EpicDoc-Update') {
+				if (response && response.responseText == 'EpicDoc-Data') {
 					me.setOnline(true);
 				} else {
 					ED.Log.i('LiveUpdater sent update request, but received an unexpected answer');
@@ -91,19 +91,19 @@ Ext.define('ED.func.LiveUpdater', {
         var me = this,
             config = ED.Config;
         
-        me.enabled = !!config.getObject('liveUpdater');
+        me.enabled = !!config.getObject('liveUpdater') || config.getBoolean('liveUpdater.disabled');
         
         if (!me.enabled) {
 			ED.Log.i('LiveUpdate disabled');
 		}
         
 		if (me.enabled) {
-			['testUrl', 'updateUrl', 'dataPath'].forEach(function(name) {
+			['url'].forEach(function(name) {
 				var value = me[name] = config.getString('liveUpdater.' + name, '');
 				
 				if (value.length == 0) {
 					me.enabled = false;
-					ED.Log.w('LiveUpdater disabled, invalid liveUpdater. ' + name + ' config:', value);
+					ED.Log.w('LiveUpdater disabled, invalid (or non-existing) liveUpdater. ' + name + ' config:', value);
 				}
 			});
 		}
@@ -111,7 +111,10 @@ Ext.define('ED.func.LiveUpdater', {
 		if (me.enabled) {
 			ED.Log.i('LiveUpdater enabled');
 			
-			var delay = Math.max(500, Math.round(config.getNumber('liveupdater', 2500)));
+			// remove back-/slashes at the end of the url
+			me.url = me.url.replace(/[\/|\\\\]*$/, '');
+			
+			var delay = Math.max(500, Math.round(config.getNumber('liveupdater.delay', 1000)));
 			
 			ED.Data.on('datachange', function() {
 				clearTimeout(me.timerId);

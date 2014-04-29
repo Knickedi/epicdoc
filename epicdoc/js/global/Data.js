@@ -350,7 +350,25 @@ Ext.define('ED.Data', {
 		me.dataMap = {};
 		me.dataOrder = [];
 		me.dataRef;
-		me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array', []);
+		me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array');
+		
+		var finalize = Ext.bind(me.initFinalize, me, [callback]);
+		
+		if (!Ext.isDefined(me.rawData)) {
+			ED.util.ResourceLoader.loadScripts({
+				paths: 'http://knickedi.github.io/epicdoc/data',
+				finish: function() {
+					me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array', []);
+					finalize();
+				}
+			});
+		} else {
+			finalize();
+		}
+	},
+	
+	initFinalize: function(callback) {
+		var me = this;
 		
 		me.rawData.forEach(function(el) {
 			if (!Ext.isArray(el) || el.length != 2) {
@@ -385,5 +403,4 @@ Ext.define('ED.Data', {
 		ED.Log.d('EpicDoc data ready');
 		callback();
 	}
-	
 });

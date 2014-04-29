@@ -94,7 +94,7 @@ Ext.define('ED.func.LiveUpdater', {
         me.enabled = !config.getBoolean('server.disabled');
         
 		if (me.enabled) {
-			me.url = config.getString('server.' + name, 'http://localhost:54321');
+			me.url = config.getString('server.url', 'http://localhost:54321');
 			ED.Log.i('EpicDoc server enabled with url:', me.url);
 			
 			// remove back-/slashes at the end of the url

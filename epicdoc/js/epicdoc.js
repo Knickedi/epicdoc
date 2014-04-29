@@ -1,33 +1,62 @@
-
-Ext.onReady(function() {
+(function() {
     
-    function load() {
+    rawLoadScript('epicdoc/extjs/ext-all.js', function() {
+        rawLoadScript('epicdoc/js/util/ResourceLoader.js', loadStyles, function() {
+            alert('Failed to load ResourceLoader.js');
+        });
+    }, function() {
+        alert('Failed to load ext-all.js');
+    })
+    
+    function loadStyles() {
+        var styles = [
+            'extjs/ext-theme-neptune-all',
+            'css/epiceditor-html',
+            'css/epicdoc',
+        ];
+
+        ED.util.ResourceLoader.loadStyles({
+            stopOnFail: true,
+            paths: styles,
+            prefix: 'epicdoc/', 
+            finish: function() {
+                loadScripts();
+            },
+            fail: function(path) {
+                alert('Failed to load ' + path);
+            }
+        });
+    }
+
+    function loadScripts() {
         var scripts = [
             //'lawnchair',
             //'lawnchair.indexeddb',
-            'epiceditor',
-            'func/LiveUpdater',
-            'global/App',
-            'global/Config',
-            'global/Data',
-            'global/Log',
-            'util/JS',
-            'view/codepanel',
-            'view/edit.sectionwindow',
-            'view/epiceditor',
-            'view/formwindow',
-            'view/licensewindow',
-            'view/new.contentwindow',
-            'view/new.sectionwindow',
-            'view/viewport'
+            'js/epiceditor',
+            'js/func/LiveUpdater',
+            'js/global/App',
+            'js/global/Config',
+            'js/global/Data',
+            'js/global/Log',
+            'js/util/JS',
+            'js/view/codepanel',
+            'js/view/edit.sectionwindow',
+            'js/view/epiceditor',
+            'js/view/formwindow',
+            'js/view/licensewindow',
+            'js/view/new.contentwindow',
+            'js/view/new.sectionwindow',
+            'js/view/viewport'
         ];
-        
+
         ED.util.ResourceLoader.loadScripts({
             stopOnFail: true,
             paths: scripts,
-            prefix: 'epicdoc/js/', 
+            prefix: 'epicdoc/', 
             finish: function() {
-                ED.App.init();
+                Ext.onReady(function() {
+                    ED.App.init();
+                });
             },
             fail: function(path) {
                 alert('Failed to load ' + path);
@@ -35,13 +64,17 @@ Ext.onReady(function() {
         });
     }
     
-    document.head.appendChild(Ext.apply(document.createElement('script'), {
-        type: 'text/javascript',
-        src: 'epicdoc/js/util/ResourceLoader.js',
-        onload: load,
-        onerror: function() {
-            alert('Failed to load ResourceLoader.js');
-        }
-    }));
+    function rawLoadScript(path, success, fail) {
+        var script = document.createElement('script');
+        
+        script.type = 'text/javascript';
+        script.src = path;
+        script.onload = success;
+        script.onerror = function() {
+            alert('Failed to load ' + path);
+        };
+        
+        document.head.appendChild(script);
+    }
     
-});
+})();

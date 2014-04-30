@@ -18,7 +18,7 @@ Ext.define('ED.func.LiveUpdater', {
         Ext.Ajax.request({
 			url: me.url + '/test',
 			success: function(response) {
-				if (response && response.responseText == 'EpicDoc-Test') {
+				if (response && response.responseText == 'epicdoc-test') {
 					ED.Log.d('EpicDoc server test successful');
 					me.setOnline(true);
 				} else {
@@ -47,7 +47,7 @@ Ext.define('ED.func.LiveUpdater', {
 			method: 'POST',          
 			params: {
 				data: Ext.encode(ED.Data.getRawData()),
-				path: me.dataPath
+				datapath: me.localPath
 			},
 			success: function(response) {
 				if (response && response.responseText == 'EpicDoc-Data') {
@@ -94,6 +94,8 @@ Ext.define('ED.func.LiveUpdater', {
         me.enabled = !config.getBoolean('server.disabled');
         
 		if (me.enabled) {
+			var url = window.location.toString();
+			me.localPath = url.substr(0, 8) == 'file:///' ? decodeURIComponent(url.substring(8, url.lastIndexOf('/'))) : '';
 			me.url = config.getString('server.url', 'http://localhost:54321');
 			ED.Log.i('EpicDoc server enabled with url:', me.url);
 			

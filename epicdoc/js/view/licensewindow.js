@@ -29,7 +29,7 @@ Ext.define('ED.view.LicenseWindow', {
                     '[EpicDoc](https://github.com/Knickedi/epicdoc) is meant to be OpenSource under [GPL3](http://www.gnu.org/licenses/gpl-3.0.html) conditions.  ',
                     'CopyRight (c) 2014 Viktor Reiser &lt;<a href="mailto:viktorreiser@gmx.de">viktorreiser@gmx.de</a>&gt;  ',
                     '',
-                    'Sincere thanks to Oscar Godson for [EpicEditor](https://github.com/OscarGodson/EpicEditor) and all authors of [Ext JS](http://www.sencha.com/products/extjs/).',
+                    'Sincere thanks to Oscar Godson for [EpicEditor](https://github.com/OscarGodson/EpicEditor), Jens Arps for [IDBWrapper](https://github.com/jensarps/IDBWrapper) and all authors of [Ext JS](http://www.sencha.com/products/extjs/).',
                     '',
                     'You can find the original source code on [GitHub](https://github.com/Knickedi/epicdoc).  ',
                      'You can contact the developers, contribute to the project or report bugs on [GitHub](https://github.com/Knickedi/epicdoc/issues).  ',

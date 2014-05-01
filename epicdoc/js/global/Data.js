@@ -354,17 +354,21 @@ Ext.define('ED.Data', {
 		
 		var finalize = Ext.bind(me.initFinalize, me, [callback]);
 		
-		if (!Ext.isDefined(me.rawData)) {
-			ED.util.ResourceLoader.loadScripts({
-				paths: 'http://knickedi.github.io/epicdoc/data',
-				finish: function() {
-					me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array', []);
-					finalize();
-				}
-			});
-		} else {
-			finalize();
-		}
+		ED.Storage.init(function(data) {
+			me.rawData = data || me.rawData;
+			
+			if (!Ext.isDefined(me.rawData)) {
+				ED.util.ResourceLoader.loadScripts({
+					paths: 'http://knickedi.github.io/epicdoc/data',
+					finish: function() {
+						me.rawData = ED.util.JS.getValue(window, 'epicdata', 'array', []);
+						finalize();
+					}
+				});
+			} else {
+				finalize();
+			}
+		});
 	},
 	
 	initFinalize: function(callback) {

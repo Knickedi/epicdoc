@@ -120,13 +120,14 @@ Ext.define('ED.App', {
 				me.updateLanguage(function() {
 					me.updateView();
 					
-					var liveUpdater = ED.func.LiveUpdater;
-					liveUpdater.on('online', function(online) {
+					ED.Server.on('online', function(online) {
 						Ext.ComponentQuery.query('[edLiveUpdater]').forEach(function(cmp) {
 							cmp.setVisible(!online);
 						});
 					});
-					liveUpdater.init();
+					ED.Server.init();
+					
+					ED.Storage.checkOnline();
 				});
 			});
 		});

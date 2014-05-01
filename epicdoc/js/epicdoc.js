@@ -1,14 +1,31 @@
 (function() {
     
     rawLoadScript('epicdoc/extjs/ext-all.js', function() {
-        rawLoadScript('epicdoc/js/util/ResourceLoader.js', loadStyles, function() {
-            alert('Failed to load ResourceLoader.js');
-        });
-    }, function() {
-        alert('Failed to load ext-all.js');
-    })
+        defineResourceLoader();
+        
+        loadStyles(function() {
+            loadScripts(function() {
+                Ext.onReady(function() {
+                    ED.App.init();
+                });
+            })
+        })
+    });
+
+    function rawLoadScript(path, success, fail) {
+        var script = document.createElement('script');
+        
+        script.type = 'text/javascript';
+        script.src = path;
+        script.onload = success;
+        script.onerror = fail || function() {
+            alert('Failed to load ' + path);
+        };
+        
+        document.head.appendChild(script);
+    }
     
-    function loadStyles() {
+    function loadStyles(finish) {
         var styles = [
             'extjs/ext-theme-neptune-all',
             'css/epiceditor-html',
@@ -19,62 +36,107 @@
             stopOnFail: true,
             paths: styles,
             prefix: 'epicdoc/', 
-            finish: function() {
-                loadScripts();
-            },
+            finish: finish,
             fail: function(path) {
                 alert('Failed to load ' + path);
             }
         });
     }
 
-    function loadScripts() {
+    function loadScripts(finish) {
         var scripts = [
-            //'lawnchair',
-            //'lawnchair.indexeddb',
-            'js/epiceditor',
-            'js/func/LiveUpdater',
-            'js/global/App',
-            'js/global/Config',
-            'js/global/Data',
-            'js/global/Log',
-            'js/util/JS',
-            'js/view/codepanel',
-            'js/view/edit.sectionwindow',
-            'js/view/epiceditor',
-            'js/view/formwindow',
-            'js/view/licensewindow',
-            'js/view/new.contentwindow',
-            'js/view/new.sectionwindow',
-            'js/view/viewport'
+            'epiceditor',
+            'idbstore',
+            'global/App',
+            'global/Config',
+            'global/Data',
+            'global/Log',
+            'global/Server',
+            'global/Storage',
+            'util/JS',
+            'view/codepanel',
+            'view/edit.sectionwindow',
+            'view/epiceditor',
+            'view/formwindow',
+            'view/licensewindow',
+            'view/new.contentwindow',
+            'view/new.sectionwindow',
+            'view/viewport'
         ];
 
         ED.util.ResourceLoader.loadScripts({
             stopOnFail: true,
             paths: scripts,
-            prefix: 'epicdoc/', 
-            finish: function() {
-                Ext.onReady(function() {
-                    ED.App.init();
-                });
-            },
+            prefix: 'epicdoc/js/', 
+            finish: finish,
             fail: function(path) {
                 alert('Failed to load ' + path);
             }
         });
     }
     
-    function rawLoadScript(path, success, fail) {
-        var script = document.createElement('script');
-        
-        script.type = 'text/javascript';
-        script.src = path;
-        script.onload = success;
-        script.onerror = function() {
-            alert('Failed to load ' + path);
-        };
-        
-        document.head.appendChild(script);
+    function defineResourceLoader() {
+        Ext.define('ED.util.ResourceLoader', {
+            singleton: true,
+            
+            loadScripts: function(cfg) {
+                this.load(Ext.apply(cfg || {}, {
+                    extension: 'js',
+                    domCreate: function(path) {
+                        return Ext.apply(document.createElement('script'), {
+                            type: 'text/javascript',
+                            src: path
+                        });
+                    }
+                }));
+            },
+
+            loadStyles: function(cfg) {
+                this.load(Ext.apply(cfg || {}, {
+                    extension: 'css',
+                    domCreate: function(path) {
+                        return Ext.apply(document.createElement('link'), {
+                            rel: 'stylesheet',
+                            type: 'text/css',
+                            href: path
+                        });
+                    }
+                }));
+            },
+
+            load: function(cfg) {
+                var me = this,
+                    paths = Ext.Array.from(cfg.paths);
+
+                if (paths.length == 0) {
+                    (cfg.finish || Ext.emptyFn)();
+                } else {
+                    var path = (cfg.prefix || '') + paths[0] + '.' + cfg.extension,
+                        el = cfg.domCreate(path);
+
+                    var loadNext = function() {
+                        el.onload = null;
+                        paths.shift();
+                        me.load(Ext.apply(cfg, { paths: paths}));
+                    };
+
+                    document.head.appendChild(Ext.apply(el, {
+                        onload: function() {
+                            (cfg.success || Ext.emptyFn)(path);
+                            loadNext();
+                        },
+                        onerror: function() {
+                            el.onload = null;
+                            (cfg.fail || Ext.emptyFn)(path);
+
+                            if (!cfg.stopOnFail) {
+                                loadNext();
+                            }
+                        }
+                    }));
+                }
+            },
+        });
     }
     
 })();

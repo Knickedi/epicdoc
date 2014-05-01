@@ -1,5 +1,5 @@
 
-Ext.define('ED.func.LiveUpdater', {
+Ext.define('ED.Server', {
     
     // ATTRIBUTES ---------------------------------------------------------------------------------
 	
@@ -36,7 +36,7 @@ Ext.define('ED.func.LiveUpdater', {
 	updateDataByServer: function() {
 		var me = this;
 		
-		if (!me.enabled && me.online) {
+		if (!me.enabled || !me.online) {
 			return;
 		}
 		
@@ -72,7 +72,7 @@ Ext.define('ED.func.LiveUpdater', {
 		if (me.online !== online) {
 			me.online = online;
 			me.fireEvent('online', online);
-			ED.App.setEditable('liveupdater', online);
+			ED.App.setEditable('server', online);
 		}
 	},
 	

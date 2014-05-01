@@ -19,11 +19,14 @@ ED.lang = Ext.apply(ED.lang || {}, {
     delete: 'Delete',
     save: 'Save',
     addGroup: 'Add group',
+    clearStorage: 'Clear storage',
     
+    pageReloadInfo: 'This action will reload the page',
+    noStorageDataInfo: 'There\'s no data in storage to clear or save',
     markdownLiveEditor: 'Markdown Live Editor',
-    
+    localStorage: 'Local storage',
     deleteConfirm: 'Do you really want to delete this and ALL depending data?',
     errorIdNotUnique: 'ID is not unique, choose another one',
     errorIdInvalidChar: 'Alpanumeric characters, dash or underscore allowed',
-    checkForLiveUpdater: 'Check again for live update server',
+    checkForEpicDocServer: 'Check again for epicdoc server',
 });

@@ -61,6 +61,7 @@
             'view/licensewindow',
             'view/new.contentwindow',
             'view/new.sectionwindow',
+            'view/storagewindow',
             'view/viewport'
         ];
 

@@ -121,11 +121,17 @@ Ext.define('ED.App', {
 					me.updateView();
 					
 					ED.Server.on('online', function(online) {
-						Ext.ComponentQuery.query('[edLiveUpdater]').forEach(function(cmp) {
+						Ext.ComponentQuery.query('[edServer]').forEach(function(cmp) {
 							cmp.setVisible(!online);
 						});
 					});
 					ED.Server.init();
+					
+					ED.Storage.on('online', function(online) {
+						Ext.ComponentQuery.query('[edStorage]').forEach(function(cmp) {
+							cmp.setVisible(online);
+						});
+					});
 					
 					ED.Storage.checkOnline();
 				});

@@ -4,6 +4,7 @@ Ext.define('ED.Storage', {
     // ATTRIBUTES ---------------------------------------------------------------------------------
 
     singleton: true,
+	extend: 'Ext.util.Observable',
     
     // PUBLIC -------------------------------------------------------------------------------------
     
@@ -11,11 +12,35 @@ Ext.define('ED.Storage', {
         var me = this;
         
         Ext.defer(function() {
+            me.fireEvent('online', !!me.store);
             ED.App.setEditable('storage', !!me.store);
         }, 1);
     },
+	
+	hasData: function() {
+		return !!this.hasDataFlag;
+	},
+	
+	clear: function(callback) {
+		var me = this;
+		
+		if (me.store) {
+			me.store.remove('data', function() {
+				Ext.callback(callback);
+			});
+		} else {
+			Ext.callback(callback);
+		}
+	},
     
     // PRIVATE ------------------------------------------------------------------------------------
+    
+    constructor: function() {
+        var me = this;
+        
+        me.callParent();
+        me.addEvents('online');
+    },
     
     init: function(callback) {
         var me = this;
@@ -30,7 +55,8 @@ Ext.define('ED.Storage', {
                 indexes: [],
                 onStoreReady: function(){
                     me.store.get('data', function(data) {
-                        callback(data && Ext.isArray(data.data) ? data.data : undefined);
+						me.hasDataFlag = data && Ext.isArray(data.data);
+						callback(me.hasDataFlag ? data.data : undefined);
                     });
                     
                     ED.Data.on('datachange', function() {

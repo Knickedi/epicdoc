@@ -38,11 +38,11 @@ Ext.define('ED.view.LicenseWindow', {
                     '',
                     '__Image attribution__',
                     '',
-                    'folder-open.png, folder-close.png, document.png (modified) | Creative Commons | [iOS 7 icons by Visual Pharm](https://www.iconfinder.com/iconsets/ios-7-icons#readme)  ',
-                    'code.png, add.png | Creative Commons | [Picol Vector by PICOL](https://www.iconfinder.com/iconsets/picol-vector#readme)  ',
-                    'server.png | Creative Commons | [WPZOOM Developer Icon Set by WPZOOM](https://www.iconfinder.com/iconsets/wpzoom-developer-icon-set#readme)  ',
-                    'edit.png, delete.png | Free for commercial use | [Streamline - Free by Webaly](https://www.iconfinder.com/iconsets/streamline-icon-set-free-pack#readme)  ',
-                    'book.png | Free for commercial use | [Internet and web by Popcic](https://www.iconfinder.com/iconsets/internet-and-web-4#readme)'
+                    'folder-open, folder-close, document (modified) | Creative Commons | [iOS 7 icons by Visual Pharm](https://www.iconfinder.com/iconsets/ios-7-icons#readme)  ',
+                    'code, add | Creative Commons | [Picol Vector by PICOL](https://www.iconfinder.com/iconsets/picol-vector#readme)  ',
+                    'server | Creative Commons | [WPZOOM Developer Icon Set by WPZOOM](https://www.iconfinder.com/iconsets/wpzoom-developer-icon-set#readme)  ',
+                    'delete, edit, storage | Free for commercial use | [Streamline - Free by Webaly](https://www.iconfinder.com/iconsets/streamline-icon-set-free-pack#readme)  ',
+                    'book | Free for commercial use | [Internet and web by Popcic](https://www.iconfinder.com/iconsets/internet-and-web-4#readme)'
                 ].join('\n')
             }
         })]);

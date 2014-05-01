@@ -64,12 +64,23 @@ Ext.define('Ed.view.Viewport', {
 						}
 					}, {
 						xtype: 'button',
-						edLiveUpdater: true,
+						edServer: true,
 						iconCls: 'ed-icon-server',
-						tooltip: ED.lang.checkForLiveUpdater,
+						tooltip: ED.lang.checkForEpicDocServer,
 						hidden: true,
 						handler: function() {
-							ED.func.LiveUpdater.testForLocalServer();
+							ED.Server.testForLocalServer();
+						}
+					}, {
+						xtype: 'button',
+						edStorage: true,
+						iconCls: 'ed-icon-storage',
+						tooltip: ED.lang.localStorage,
+						hidden: true,
+						handler: function() {
+							Ext.widget('edstoragewindow', {
+								animateTarget: this.el
+							}).show();
 						}
 					}, '->', {
 						xtype: 'displayfield',
